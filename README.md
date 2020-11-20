@@ -2,7 +2,6 @@
 What happens when you combine a shmup and bullet hell. 
 But you have *_no_* control over your movement.
 
-
 ## Game Play
 
 ### Player Movement
