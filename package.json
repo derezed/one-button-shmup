@@ -2,15 +2,27 @@
   "name": "one-button-shmup",
   "version": "1.0.0",
   "description": "What happens when you combine a shmup and bullet hell.  But you have *_no_* control over your movement.",
-  "main": "src/assets/main.js",
+  "main": "src/assets/bundle.js",
   "dependencies": {
+    "autoprefixer": "^10.0.2",
     "pixi.js": "^5.3.3",
+    "rollup-plugin-postcss": "^3.1.8",
     "tailwindcss": "^2.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-commonjs": "^16.0.0",
+    "@rollup/plugin-node-resolve": "^10.0.0",
+    "postcss": "^8.1.8",
+    "postcss-cli": "^8.3.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup-plugin-serve": "^1.1.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup --config rollup.config.js"
+    "build": "rollup --config rollup.config.js",
+    "start": "rollup --config rollup.config.js --watch"
   },
   "repository": {
     "type": "git",
