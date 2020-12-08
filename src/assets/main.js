@@ -1,101 +1,74 @@
+import Phaser from 'phaser'
 
-import * as PIXI from 'pixi.js';
-
-let app = new PIXI.Application({
-  width: 768,
-  height: 768,
-  antialias: true,
-});
-
-const loader = PIXI.Loader.shared;
-
-const sprite = {};
-
-let gameState;
-let playerState = {
-  "direction": null,
-  "speed": 2,
-  "shipState": 1, // 0 for shielded; 1 for shooting
+const gameState = {
+    coolDown: null,
 };
-let player;
 
-loader.add('playerShip', 'assets/images/player/P-blue-a.png')
-      .add('playerShipShielded', 'assets/images/player/P-blue-b2.png');
+const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 850,
+    scene: {
+        preload,
+        create,
+        update
+    }
+};
 
-loader.load(setUp);
-
-function setUp() {
-  // add view to page
-  document.querySelector(".game-wrapper").appendChild(app.view);
-
-  // build player ship
-  player = PIXI.Sprite.from('assets/images/player/P-blue-a.png');
-
-  player.anchor.set(0.5);
-
-  player.width = 128;
-  player.height = 128;
-
-  player.x = app.screen.width / 2;
-  
-  player.y = app.screen.height - player.width / 2;
-
-  // player interactions
-  app.stage.interactive = true;
-  app.stage.on("click", changeShipState);
-  app.stage.hitArea = new PIXI.Rectangle(0, 0, app.screen.width, app.screen.height)
-
-  // add player to stage
-  app.stage.addChild(player);
-
-  app.ticker.add(delta => gameLoop(delta));
+function preload() {
+    this.load.image('playerShip', '/assets/images/player.png');
+    this.load.image('playerShip--Shield', '/assets/images/player-s.png');
+    this.load.image('background', '/assets/images/space.png');
 }
 
-function changeShipState() {
-  let texture = null;
-  const nextState = playerState.shipState === 0 ? 1 : 0;
-  updatePlayerState("shipState", nextState);
+function create() {
+    gameState.background = this.add.image(0, 0, 'background');
+    gameState.background.setOrigin(0, 0);
 
+    gameState.player = this.add.sprite(50, (config.height - 50), 'playerShip--Shield');
+    gameState.playerState = 0;
+    gameState.player.setScale(.2);
+    gameState.playerCanSwitch = true;
 
-  if (nextState === 0) {
-    texture = PIXI.Texture.from('assets/images/player/P-blue-b2.png');
-    player.width = 128;
-    player.height = 128;
-  } else {
-    texture = PIXI.Texture.from('assets/images/player/P-blue-a.png');
-  }
+    this.tweens.add({
+        targets: gameState.player,
+        x: config.width - 50,
+        duration: 5000,
+        ease: 'Sine.easeInOut',
+        loop: -1,
+        yoyo: true,
+    });
 
-  player.texture = texture;
-
-  console.log(nextState);
+    gameState.player.setInteractive();
+    gameState.cursors = this.input.keyboard.createCursorKeys();
 }
 
-function movePlayer() {
-  
-  if (playerState.direction === null) {
-    let directionValue = Math.floor(Math.random() * Math.floor(2));
-    directionValue = directionValue ? "right" : "left";
+function switchPlayerState(game) {
+    if (gameState.playerState == 0) {
+        gameState.player.setTexture('playerShip');
+        gameState.playerState = 1;
+        gameState.playerCanSwitch = false;
+    } else if (gameState.playerState == 1) {
+        gameState.player.setTexture('playerShip--Shield');
+        gameState.playerState = 0;
+        gameState.playerCanSwitch = false;
+    }
 
-    updatePlayerState("direction", directionValue);
-  }
-
-  if (playerState.direction === "right") {
-    player.x += playerState.speed; 
-  } else {
-    player.x -= playerState.speed;
-  }
-
-  if (player.x === app.screen.width) {
-    updatePlayerState("direction", "left");
-  } else if (player.x == 0) {
-    updatePlayerState("direction", "right");
-  }
+    gameState.coolDown = game.time.addEvent({
+        delay: 100,
+        callback: clearCoolDown,
+    });
 }
 
-function updatePlayerState(key, value) {
-  playerState[key] = value;
+function clearCoolDown() {
+    console.log("Cool Down Up");
+    gameState.playerCanSwitch = true;
 }
 
-function gameLoop() {
-  movePlayer();
+function update() {
+    if (gameState.cursors.space.isDown && gameState.playerCanSwitch === true) {
+        switchPlayerState(this);
+    }
 }
+
+const game = new Phaser.Game(config);
