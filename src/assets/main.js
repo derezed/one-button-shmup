@@ -25,7 +25,7 @@ function create() {
     gameState.background = this.add.image(0, 0, 'background');
     gameState.background.setOrigin(0, 0);
 
-    gameState.player = this.add.sprite(50, (config.height - 50), 'playerShip--Shield');
+    gameState.player = this.add.sprite(50, (config.height - 150), 'playerShip--Shield');
     gameState.playerState = 0;
     gameState.player.setScale(.2);
     gameState.playerCanSwitch = true;
