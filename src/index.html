@@ -3,10 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhaserJS Starter</title>
+    <title>One-Button Shmup</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <style type="text/css">
+        @font-face {
+            font-family: "RedeemGold";
+            src: url('./assets/fonts/RedeemGold.woff') format("woff");
+        }
+
+        * {
+            font-family: "RedeemGold";
+        }
+
+        #status--shield,
+        #status--shoot {
+            --tw-text-opacity: 1;
+            color: rgba(107, 114, 128, var(--tw-text-opacity));
+        }
+
+        #status--shield.active,
+        #status--shoot.active {
+            color: rgba(255, 255, 255, var(--tw-text-opacity));
+        }
+    </style>
 </head>
 <body>
-    
-<script src="./compiled/main.bundle.js"></script>
+    <div id="phaser" class="relative">
+        <div id="ui" class="absolute bottom-0 w-full h-20 max-w-3xl">
+            <div id="ship-state" class="w-full h-full flex flex-col justify-center px-4">
+                <div id="ship-state--status" class=" w-auto self-start flex">
+                    <p class="text-white text-2xl mr-2">Status:</p>
+                    <ul>
+                        <li id="status--shield" class="active inline-block text-white text-2xl">Shield</li>
+                        <li class="inline-block text-white text-2xl">/</li>
+                        <li  id="status--shoot" class="inline-block text-white text-2xl">Shoot</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./compiled/main.bundle.js"></script>
 </body>
 </html>

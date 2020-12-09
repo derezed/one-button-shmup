@@ -1,7 +1,14 @@
 import Phaser from 'phaser'
 
+const uiShieldText = document.querySelector("#status--shield");
+const uiShootText = document.querySelector("#status--shoot");
+
 const gameState = {
     coolDown: null,
+    ui: {
+        shieldText: uiShieldText,
+        shootText: uiShootText
+    }
 };
 
 const config = {
@@ -12,7 +19,8 @@ const config = {
         preload,
         create,
         update
-    }
+    },
+    parent: "phaser"
 };
 
 function preload() {
@@ -54,6 +62,9 @@ function switchPlayerState(game) {
         gameState.playerCanSwitch = false;
     }
 
+    gameState.ui.shieldText.classList.toggle('active');
+    gameState.ui.shootText.classList.toggle('active');
+
     gameState.coolDown = game.time.addEvent({
         delay: 100,
         callback: clearCoolDown,
@@ -61,7 +72,6 @@ function switchPlayerState(game) {
 }
 
 function clearCoolDown() {
-    console.log("Cool Down Up");
     gameState.playerCanSwitch = true;
 }
 
