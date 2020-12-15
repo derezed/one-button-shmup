@@ -25,19 +25,40 @@
         #status--shoot.active {
             color: rgba(255, 255, 255, var(--tw-text-opacity));
         }
+
+        #status--recharge {
+            background-color: #893a3a;
+        }
+
+        #status--recharge.full-charge {
+            background-color: #0180ff;
+        }
     </style>
 </head>
 <body>
     <div id="phaser" class="relative">
         <div id="ui" class="absolute bottom-0 w-full h-20 max-w-3xl">
-            <div id="ship-state" class="w-full h-full flex flex-col justify-center px-4">
-                <div id="ship-state--status" class=" w-auto self-start flex">
-                    <p class="text-white text-2xl mr-2">Status:</p>
-                    <ul>
-                        <li id="status--shield" class="active inline-block text-white text-2xl">Shield</li>
-                        <li class="inline-block text-white text-2xl">/</li>
-                        <li  id="status--shoot" class="inline-block text-white text-2xl">Shoot</li>
-                    </ul>
+            <div id="ship-state" class="w-full h-full flex flex-row justify-start px-4">
+                <div id="ship-state--status" class="flex flex-col w-auto self-start">
+                    <div class="flex">
+                        <p class="text-white text-2xl mr-2">Status:</p>
+                        <ul>
+                            <li id="status--shield" class="active inline-block text-white text-2xl">Shield</li>
+                            <li class="inline-block text-white text-2xl">/</li>
+                            <li  id="status--shoot" class="inline-block text-white text-2xl">Shoot</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex">
+                        <p class="text-white text-2xl mr-2">Recharge:</p>
+                        <div id="status--recharge" class="full-charge w-full h-4 self-center max-w-24"></div>
+                    </div>
+                </div>
+
+                <div id="ship-state--score" class="flex flex-col w-auto self-start mx-8 justify-center">
+                    <p class="text-white text-2xl mr-2">Score:
+                        <span id="ship-state--player-score"></span>
+                    </p>
                 </div>
             </div>
         </div>
