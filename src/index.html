@@ -15,6 +15,10 @@
             font-family: "RedeemGold";
         }
 
+        #ui {
+            max-width: 800px;
+        }
+
         #status--shield,
         #status--shoot {
             --tw-text-opacity: 1;
@@ -35,34 +39,39 @@
         }
     </style>
 </head>
-<body>
-    <div id="phaser" class="relative">
-        <div id="ui" class="absolute bottom-0 w-full h-20 max-w-3xl">
-            <div id="ship-state" class="w-full h-full flex flex-row justify-start px-4">
-                <div id="ship-state--status" class="flex flex-col w-auto self-start">
-                    <div class="flex">
-                        <p class="text-white text-2xl mr-2">Status:</p>
-                        <ul>
-                            <li id="status--shield" class="active inline-block text-white text-2xl">Shield</li>
-                            <li class="inline-block text-white text-2xl">/</li>
-                            <li  id="status--shoot" class="inline-block text-white text-2xl">Shoot</li>
-                        </ul>
+    <body class="bg-black">
+        <div id="phaser" class="relative flex justify-center">
+            <div id="ui" class="absolute bottom-0 w-full h-20 bg-black">
+                <div id="ship-state" class="w-full h-full flex flex-row justify-start px-4">
+                    <div id="ship-state--status" class="flex flex-col w-auto self-start">
+                        <div class="flex">
+                            <p class="text-white text-2xl mr-2">Status:</p>
+                            <ul>
+                                <li id="status--shield" class="active inline-block text-white text-2xl">Shield</li>
+                                <li class="inline-block text-white text-2xl">/</li>
+                                <li  id="status--shoot" class="inline-block text-white text-2xl">Shoot</li>
+                            </ul>
+                        </div>
+
+                        <div class="flex">
+                            <p class="text-white text-2xl mr-2">Recharge:</p>
+                            <div id="status--recharge" class="full-charge w-full h-4 self-center max-w-24"></div>
+                        </div>
                     </div>
 
-                    <div class="flex">
-                        <p class="text-white text-2xl mr-2">Recharge:</p>
-                        <div id="status--recharge" class="full-charge w-full h-4 self-center max-w-24"></div>
+                    <div id="ship-state--score" class="flex flex-col w-auto self-start mx-8 justify-center">
+                        <p class="text-white text-2xl mr-2">Score:
+                            <span id="ship-state--player-score"></span>
+                        </p>
                     </div>
-                </div>
 
-                <div id="ship-state--score" class="flex flex-col w-auto self-start mx-8 justify-center">
-                    <p class="text-white text-2xl mr-2">Score:
-                        <span id="ship-state--player-score"></span>
-                    </p>
+                    <div id="ship-state--controls" class="max-w-xs">
+                        <p class="text-white text-2xl mr-2">Controls:</p>
+                        <p class="text-white text-xl mr-2">Space - Toggle between Shield & Shoot; while shieled, you take no damage.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="./compiled/main.bundle.js"></script>
-</body>
+        <script src="./compiled/main.bundle.js"></script>
+    </body>
 </html>
