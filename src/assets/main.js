@@ -37,11 +37,12 @@ const config = {
 };
 
 function preload() {
-    this.load.image('playerShip', '/assets/images/player.png');
-    this.load.image('playerShip--Shield', '/assets/images/player-s.png');
-    this.load.image('background', '/assets/images/space.png');
-    this.load.image('bullet', '/assets/images/bullet.png');
-    this.load.image('enemy1', '/assets/images/enemy-1.png');
+    this.load.image('playerShip', 'assets/images/player.png');
+    this.load.image('playerShip--Shield', 'assets/images/player-s.png');
+    this.load.image('background', 'assets/images/space.png');
+    this.load.image('bullet', 'assets/images/bullet.png');
+    this.load.image('enemy1', 'assets/images/enemy-1.png');
+    this.load.image('enemy-bullet', 'assets/images/enemy-bullet.png');
 }
 
 function create() {
@@ -52,6 +53,11 @@ function create() {
     gameState.bullets = this.physics.add.group({
         defaultKey: 'bullet',
         maxSize: 25
+    });
+
+    gameState.enemyBullets = this.physics.add.group({
+        defaultKey: 'enemy-bullet',
+        maxSize: 1000
     });
 
     gameState.background = this.add.image(0, 0, 'background');
@@ -82,6 +88,7 @@ function create() {
     });
 
     this.physics.add.collider(gameState.bullets, gameState.enemy1, scoreEnemy, null, this);
+    this.physics.add.collider(gameState.player, gameState.enemyBullets, playerHit, null, this);
     this.physics.add.collider(gameState.player, gameState.enemy1, playerHit, null, this);
 }
 
@@ -148,14 +155,36 @@ function spawnEnemy(game) {
     enemy.setVisible(true);
     enemy.setImmovable();
 
+    enemy.canShoot = 1;
+
     enemy.body.velocity.y = 300;
 
     gameState.canSpawn = 0;
 
     gameState.enemySpawnTimer = game.time.addEvent({
-        delay: 1500,
+        delay: 1000,
         callback: clearSpawnTimer
     });
+}
+
+function enemyShoot(enemy, game) {
+    if (enemy.active) {
+        const bullet = gameState.enemyBullets.get(enemy.x, enemy.y + 50);
+
+        if (bullet) {
+            bullet.setActive(true);
+            bullet.setVisible(true);
+            bullet.setScale(.2);
+
+            bullet.body.velocity.y = 800;
+            
+            enemy.canShoot = 0;
+            enemy.shootTimer = game.time.addEvent({
+                delay: 1000,
+                callback: () => { enemy.canShoot = 1 }
+            })
+        }
+    }
 }
 
 function clearSpawnTimer() {
@@ -182,7 +211,11 @@ function scoreEnemy(bullet, enemy) {
     gameState.ui.scoreText.innerHTML = currentScore;
 }
 
-function playerHit(player) {
+function playerHit(player, bullet) {
+    bullet.setActive(false);
+    bullet.x = 1000;
+    bullet.body.velocity.y = 0;
+    
     if (player.texture.key !== "playerShip--Shield") {
         restartGame(this);
     }
@@ -211,6 +244,18 @@ function update() {
     }.bind(this));
 
     gameState.enemy1.children.each(function(a) {
+        if (a.active) {
+            if (a.y > 800) {
+                a.setActive(false);
+            }
+
+            if (a.canShoot) {
+                enemyShoot(a, this);
+            }
+        }
+    }.bind(this));
+
+    gameState.enemyBullets.children.each(function(a) {
         if (a.active) {
             if (a.y > 800) {
                 a.setActive(false);
